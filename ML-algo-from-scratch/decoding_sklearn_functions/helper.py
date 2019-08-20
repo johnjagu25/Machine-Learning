@@ -9,3 +9,6 @@ def accuracy_score(y , y_pred):
         return sum([ 1 for x,y in zip(y , y_pred) if x==y]) / len(y)
     else:
         return (y == y_pred).mean()
+
+def normalize(x,order=2):
+    return x / np.linalg.norm(x,order)

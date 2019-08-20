@@ -7,7 +7,7 @@ from sklearn.metrics import r2_score
 
 # reference http://www2.lawrence.edu/fast/GREGGJ/Python/numpy/numpyLA.html
 
-class LinearRegression():
+class LinearRegressionN():
     def __init__(self):
         pass
     def fit(self, X, y):

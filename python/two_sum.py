@@ -16,6 +16,7 @@ def two_sum(arr, k) :
  
  
 print(two_sum([4,7,1,-3,2], 5))
+print(two_sum([10,15,3,7], 17))
 print(two_sum([1, 4, 45, 6, 10, 8] ,7))
 print(two_sum([1, 4, 45, 6, 10, 8] ,20))
 

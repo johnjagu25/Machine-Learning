@@ -6,7 +6,8 @@ from sklearn.pipeline import make_pipeline
 
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+# from sklearn.linear_model import LinearRegression
+from linear_regression_gradient_descent import LinearRegression
 
 
 
@@ -30,7 +31,7 @@ class PolynomialRegression():
         X = (X - np.mean(X,0)) / np.std(X,0)
         self.X = self.polynomial_feature(X)
         self.y = y
-        self.reg = LinearRegression()
+        self.reg = LinearRegression(polyReg = True)
         self.reg.fit(self.X,self.y)
     def predict(self,X):
         X = (X - np.mean(X,0)) / np.std(X,0)
@@ -38,13 +39,15 @@ class PolynomialRegression():
         return self.reg.predict(X)
 
 def main():
+
     from sklearn.datasets import load_boston
     from sklearn.metrics import r2_score
     dataset = load_boston()
-    dataset.data = dataset.data[:,[5,12]]
+    dataset.data = dataset.data[:,[5]]
     X_train,X_test,y_train,y_test = train_test_split(dataset.data,dataset.target,test_size=0.3)
-    reg =  PolynomialRegression(learning_rate = 0.5,n_iter = 1000,precision = True,degree=3)
+    reg =  PolynomialRegression(learning_rate = 0.5,n_iter = 1000,precision = True,degree=4)
     reg.fit(X_train,y_train)
+    print(r2_score(y_train,reg.predict(X_train)))
     print(r2_score(y_test,reg.predict(X_test)))
 
 
