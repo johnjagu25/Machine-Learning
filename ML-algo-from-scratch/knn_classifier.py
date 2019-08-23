@@ -6,8 +6,8 @@ import math
 
 class KNNClassifier():
 
-    def __init__(self,k_neighbors = 5):
-        self.k_neighbors = k_neighbors
+    def __init__(self,n_neighbors = 5):
+        self.n_neighbors = n_neighbors
 
     def fit(self,X,y):
         self.X = X
@@ -18,7 +18,7 @@ class KNNClassifier():
         y_pred = np.empty(pred_size)
         for i,point1 in enumerate(X):
             cal_dist_index = np.argsort([self.euclidean_distance(point1,point2) for point2 in self.X])
-            k_sample = cal_dist_index[:self.k_neighbors]
+            k_sample = cal_dist_index[:self.n_neighbors]
             k_nearest_neighbors = np.array(self.y[k_sample])
             y_pred[i] = self._majority_vote(k_nearest_neighbors)
         
@@ -45,7 +45,7 @@ def main():
     X = dataset.data
     y = dataset.target 
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3)
-    clf = KNNClassifier(k_neighbors=3)
+    clf = KNNClassifier(n_neighbors=3)
     clf.fit(X_train,y_train)
     print(clf.score(X_test,y_test))
 if __name__ == '__main__':

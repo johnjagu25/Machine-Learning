@@ -8,7 +8,10 @@ class LogisiticRegressions():
     """ Logistic Regression is a classification algorithm.
         Implementation is almost similar to Linear Regression. There is a small change in hypothesis.
         I would recommend you to compare both the implementation.
-        Our algorithm uses One vs All strategy.    """
+        Our algorithm uses One vs All strategy.  
+        One-vs-all classification is a method which involves training N distinct binary classifiers,
+        each designed for recognizing a particular class
+          """
 
     def __init__(self, alpha=0.1, n_iter=1000):
         self.alpha = alpha
@@ -38,6 +41,7 @@ class LogisiticRegressions():
     def predict(self, X):
         X = np.insert(X, 0, 1, axis=1)
         return [self.predict_row(i) for i in X]
+
     def predict_row(self,X):
         return max((X.dot(coeff), label) for coeff, label in self.theta)[1]
 

@@ -11,9 +11,4 @@ def findPythagoreanTriplets(nums):
 
 
 print(findPythagoreanTriplets([12,3, 5, 11,4,7,25,10]))
-
-3 - 12 + 5 , 5 + 13
-12 - 5 + 13, 13 + 3
-5 - 13 + 3 , 3 + 12
-13 - 3 + 12 , 12 + 5
 # True

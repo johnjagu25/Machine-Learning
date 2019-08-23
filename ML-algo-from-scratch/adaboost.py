@@ -1,42 +1,48 @@
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_breast_cancer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import normalize
 import numpy as np
 class Adaboost:
-    def __init__(self,n_estimators = 100):
+    def __init__(self,n_estimators = 100,n_samples=None):
+        self.n_samples = n_samples;
         self.n_estimators = n_estimators
         self.tree = []
 
     def fit(self,X,y):
-        estimator_list, alpha_list  = [], []
+        
+        estimator_list, estimator_weight_list  = [], []
 
         n = len(y)
         sample_weight = np.ones(n) / n
+        cool = []
+        
         for val in range(self.n_estimators):
+            indices = [i for i in np.random.choice(X.shape[0], X.shape[0], p=sample_weight)]
+            X = X[indices]
+            y = y[indices]
             dec = DecisionTreeClassifier(max_depth=1)
-            dec.fit(X,y,sample_weight=sample_weight)
+            dec.fit(X,y)
             y_predict = dec.predict(X)
             incorrect = (y_predict != y)
-            #calculate the total error in the dataset
-            error = sum(sample_weight[y != y_predict])
-            if error == 0:
-                   break
-            # calculate alpha
-            #when total error is small alpha relatively large andd vice versa
-            #when alpha is negative, it votes for inverse value of the prediction
-            #below equation fails when error value is 1 or 0, to prevent add a small error
-            # estimator_error = np.mean( np.average(incorrect, weights=sample_weight, axis=0))
-            alpha = 1/2*np.log((1 - error)/error)
-            #misclassified class will get high weight
-            sample_weight *= np.exp(alpha * incorrect)
+            estimator_error = np.mean( np.average(incorrect, weights=sample_weight, axis=0))
+            estimator_weight = 1/2*np.log((1 - estimator_error)/estimator_error)
+
+            sample_weight *= np.exp(estimator_weight * incorrect * ((sample_weight > 0) | (estimator_weight < 0)))
+            if np.isnan(np.sum(sample_weight)):
+                sample_weight *= np.exp(estimator_weight * incorrect * ((sample_weight > 0) | (estimator_weight < 0)))
+            else:
+                cool = np.copy(sample_weight) 
+                coolan = estimator_weight
+                coolb = estimator_error
+            sample_weight_sum = np.sum(sample_weight)
             # normalize
-            sample_weight /= np.sum(sample_weight)
+            sample_weight /= sample_weight_sum
             estimator_list.append(dec)
-            alpha_list.append(alpha.copy())
+            estimator_weight_list.append(estimator_weight.copy())
         self.estimator_list = np.array(estimator_list)
-        self.alpha_list = np.array(alpha_list)
+        self.estimator_weight_list = np.array(estimator_weight_list)
    
 
     def weighted_majority_vote(self, weighted_prediction):
@@ -60,29 +66,21 @@ class Adaboost:
         predictions = []
         for i in range(X.shape[0]):
             predicts_i = np.array([estimator.predict([X[i]])[0] for estimator in self.estimator_list])
-            weighted_prdicts_i = [(p, alpha) for p , alpha in zip( predicts_i,self.alpha_list)]
+            weighted_prdicts_i = [(p, alpha) for p , alpha in zip( predicts_i,self.estimator_weight_list)]
             predictions.append(self.weighted_majority_vote(weighted_prdicts_i))
-
         return predictions
         
 
 def main():
     from sklearn.datasets import load_breast_cancer
     dataset = load_breast_cancer()
-    # model= Adaboost(n_estimators = 100)
+    
     X_train,X_test,y_train,y_test = train_test_split(dataset.data,dataset.target,test_size=0.3)
-    # model.fit(X_train,y_train)
-    # print(accuracy_score(y_test,model.predict(X_test)))
-    from sklearn.ensemble import AdaBoostClassifier
     for val in [10,100,200,400,500,1000]:
-        model= Adaboost(n_estimators = val)
-        model1 = AdaBoostClassifier(n_estimators = val)
+        model= Adaboost(n_samples=400,n_estimators = val)
         model.fit(X_train,y_train)
         print(accuracy_score(y_test,model.predict(X_test)))
-        print("-------scratch-------")
-        model1.fit(X_train,y_train)
-        print(accuracy_score(y_test,model1.predict(X_test)))
-        print("------sklearn--------")
+        print("--------------")
 
 
 if __name__ == "__main__":
