@@ -6,9 +6,10 @@ class NaiveBayes():
     Baye's theorem : 
     posterior = (prior * likelihood) / marginal probablity
     p(y|X) = (p(y) * p(X|y)) / p(X)
-    Ignore marginal probablity as this is same for all the class.
+    Ignore the marginal probablity denominator since this is same for all class.
 
     Naive baye's assumption :
+    Features are conditionally independent from one another
     p(y|(X1,X2,X3)) =  (p(y) * p(X1|y) *  p(X2|y) *  p(X3|y)) / (p(X1) * p(X2) * p(X3))
 
     Gaussian Likelihood for p(X1|y) :
