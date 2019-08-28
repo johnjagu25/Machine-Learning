@@ -20,16 +20,14 @@ class NaiveBayes():
     p(X1|y) = (count of tokenised words in class + 1) / (total counts of words in class + vocabulary + 1)
     """
     def __init__(self):
-        pass
-
+        self.bow_dict = []
+        self.vocab_size = None
 
     def fit(self,X,y):
         self.labels = np.unique(y)
-        self.n_samples = y.shape[0]
         self.n_classes = self.labels.shape[0]
         self.X = self._preprocessing_string(np.array(X))
-        self.y = np.array(y)
-        self.bow_dict = []
+        self.y = np.array(y)        
         self.class_word_count = np.empty(self.n_classes)
         vocab_words = []
         for index,label in enumerate(self.labels):
