@@ -16,7 +16,6 @@ class Adaboost:
 
         n = len(y)
         sample_weight = np.ones(n) / n
-        cool = []
         
         for val in range(self.n_estimators):
             indices = [i for i in np.random.choice(X.shape[0], X.shape[0], p=sample_weight)]
@@ -32,10 +31,6 @@ class Adaboost:
             sample_weight *= np.exp(estimator_weight * incorrect * ((sample_weight > 0) | (estimator_weight < 0)))
             if np.isnan(np.sum(sample_weight)):
                 sample_weight *= np.exp(estimator_weight * incorrect * ((sample_weight > 0) | (estimator_weight < 0)))
-            else:
-                cool = np.copy(sample_weight) 
-                coolan = estimator_weight
-                coolb = estimator_error
             sample_weight_sum = np.sum(sample_weight)
             # normalize
             sample_weight /= sample_weight_sum
