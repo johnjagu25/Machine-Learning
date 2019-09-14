@@ -20,7 +20,7 @@ def merge(lists):
     a,b = lists
     loop_over  = False
     currentNode,trav_node = (a,b) if a.val<b.val else (b,a)
-    merge_node = head_node = Node(currentNode.val)
+    merge_node = root_node = Node(currentNode.val)
     while currentNode :
         if loop_over:
             currentNode = None
@@ -35,7 +35,7 @@ def merge(lists):
                 currentNode,trav_node = (currentNode.next,trav_node) if  currentNode.next.val < trav_node.val  else (trav_node,currentNode.next)
                 merge_node.next = Node(currentNode.val)
                 merge_node = merge_node.next
-    return head_node
+    return root_node
 
   # Fill this in.
 
