@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 from sklearn.datasets import load_boston,load_diabetes
 import matplotlib.pyplot as plt
+from sklearn.linear_model import Ridge,Lasso
+from sklearn.preprocessing import MinMaxScaler
 
 class LinearRegression():
     def __init__(self, alpha=0.05, n_iter=1000, reg=lambda w : 0, lamb=0 , polyReg = False,lossfunc = lambda w : 0 ):
@@ -75,33 +77,37 @@ def main():
                 X, y, test_size=0.3,random_state = 42)
     n_features = X.shape[1]
     params = np.zeros((n_features,1))
-    for val in [0.2,0.5,1,2,5,10]:
-        reg = LinearRegression(lamb=val)
+    scaler = MinMaxScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+    for val in [0.05,0.1,0.2,1]:
+        reg = LassoRegression(alpha=val)
         reg.fit(X_train,y_train)
-        print(reg.mean_squared_error())
+        print(reg.coef_)
+        # print(reg.mean_squared_error())
         print("{} is {}".format(val,reg.score(X_test, y_test)))
 
-class Ridge(LinearRegression):
+class RidgeRegression(LinearRegression):
     def __init__(self,alpha=1):
         self.lamb = alpha
         self.regularization = lambda w : self.lamb * w
         self.lossfunc = lambda w : self.lamb * w.T.dot(w)
-        super(Ridge,self).__init__(lamb = self.lamb,reg = self.regularization,lossfunc = self.lossfunc)
+        super(RidgeRegression,self).__init__(lamb = self.lamb,reg = self.regularization,lossfunc = self.lossfunc)
     def fit(self,X,y):
-        return super(Ridge,self).fit(X,y)
+        return super(RidgeRegression,self).fit(X,y)
     def predict(self,X,y):
-        return super(Ridge,self).predict(X)
+        return super(RidgeRegression,self).predict(X)
 
-class Lasso(LinearRegression):
+class LassoRegression(LinearRegression):
     def __init__(self,alpha=1):
         self.lamb = alpha
         self.lossfunc = lambda w : self.lamb * np.linalg.norm(w)
         self.regularization = lambda w : self.lamb * np.sign(w)
-        super(Lasso,self).__init__(lamb = self.lamb,reg = self.regularization,lossfunc = self.lossfunc)
+        super(LassoRegression,self).__init__(lamb = self.lamb,reg = self.regularization,lossfunc = self.lossfunc)
     def fit(self,X,y):
-        return super(Lasso,self).fit(X,y)
+        return super(LassoRegression,self).fit(X,y)
     def predict(self,X,y):
-        return super(Lasso,self).predict(X)
+        return super(LassoRegression,self).predict(X)
 
 
 

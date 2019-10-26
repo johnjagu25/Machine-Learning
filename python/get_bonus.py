@@ -21,7 +21,6 @@ def getBonuses(performance):
 
     bonus = 1
     emp_perf = performance[val]
-
     if emp_perf > performance[val-1]:
         bonus+=1
     if emp_perf > performance[val+1]:

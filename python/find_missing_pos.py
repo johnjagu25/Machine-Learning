@@ -18,8 +18,12 @@ def getFirstPosVal(arr):
         if diff > 0:
           missing = maxv + 1
         maxv = value
+      elif missing == value:
+        maxv = value
+        missing = None
       else :
           missing = maxv - value - 1
+
       if not missing:
         missing = maxv + 1
        
