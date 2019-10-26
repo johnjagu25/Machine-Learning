@@ -3,7 +3,6 @@
 # Given a positive integer n, return the n-th perfect number.
 
 # For example, given 1, you should return 19. Given 2, you should return 28.
-
 def perfect_number(n):
     sum_of_digit = 0
     total_val = ""
