@@ -10,5 +10,5 @@ def findPythagoreanTriplets(nums):
     return False
 
 
-print(findPythagoreanTriplets([12,3, 5, 11,4,7,25,10]))
+print(findPythagoreanTriplets([12,3]))
 # True
